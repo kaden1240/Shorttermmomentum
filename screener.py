@@ -14,6 +14,18 @@ SHEET_NAME = "Short Term Momentum Engine"
 # ... keep all your other functions as-is ...
 
 # === Run Screener ===
+
+def load_sp500():
+    print("Loading S&P 500 tickers...")
+    url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    html = requests.get(url, headers=headers).text
+    tables = pd.read_html(html)
+    df = tables[0]
+    tickers = df["Symbol"].tolist()
+    tickers = [ticker.replace(".", "-") for ticker in tickers]
+    return tickers
+    
 def run_screener():
     """Run the stock screener and update Google Sheets"""
     print("Starting stock screener...")
