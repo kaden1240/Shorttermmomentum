@@ -4,7 +4,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 import time
 import yfinance as yf
 import pandas as pd
-import pandas_ta as ta
 import numpy as np
 
 # === CONFIGURATION ===
