@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 
 # === CONFIGURATION ===
-SHEET_NAME = "NextDay Edge Trade Engine"
+SHEET_NAME = "Short Term Momentum Engine"
 
 # ... keep all your other functions as-is ...
 
@@ -46,7 +46,7 @@ def run_screener():
         "High Momentum Stocks", "Change %", "Close", "Volume", "RSI", "MACD Diff",
         "Stoch K"
     ])
-    sheet3.clear()
+    
     
     # Screen all tickers
     for ticker in SP500_TICKERS:
