@@ -5,4 +5,4 @@ yfinance
 pandas
 numpy
 lxml
-pandas-ta
+pandas-ta==0.3.14b0
