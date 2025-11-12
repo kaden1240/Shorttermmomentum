@@ -19,28 +19,31 @@ from io import StringIO
 import requests
 import pandas as pd
 
+from io import StringIO
+import requests
+import pandas as pd
+
 def load_sp500():
     print("Loading S&P 500 tickers...")
     url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
     headers = {"User-Agent": "Mozilla/5.0"}
     html = requests.get(url, headers=headers).text
 
-    # wrap html in StringIO (fixes the FutureWarning)
+    # Use StringIO to fix the FutureWarning
     tables = pd.read_html(StringIO(html))
-    df = tables[0]
 
-    # make sure all column names are strings
-    df.columns = df.columns.map(str)
+    df = None
+    for table in tables:
+        table.columns = table.columns.map(str)
+        if any("symbol" in c.lower() or "ticker" in c.lower() for c in table.columns):
+            df = table
+            break
 
-    # find any column containing 'symbol'
-    possible_cols = [c for c in df.columns if "symbol" in c.lower()]
-    if not possible_cols:
-        raise ValueError(f"Couldn't find symbol column in table. Found: {df.columns.tolist()}")
+    if df is None:
+        raise ValueError("No valid S&P 500 table found. Wikipedia page structure may have changed.")
 
-    symbol_col = possible_cols[0]
+    symbol_col = [c for c in df.columns if "symbol" in c.lower() or "ticker" in c.lower()][0]
     tickers = df[symbol_col].astype(str).tolist()
-
-    # replace dots with dashes for Yahoo Finance
     tickers = [ticker.replace(".", "-") for ticker in tickers]
 
     print(f"Loaded {len(tickers)} tickers.")
