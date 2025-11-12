@@ -15,20 +15,24 @@ SHEET_NAME = "Short Term Momentum Engine"
 
 # === Run Screener ===
 
-def load_sp500():
-    import requests
-    import pandas as pd
+from io import StringIO
+import requests
+import pandas as pd
 
+def load_sp500():
     print("Loading S&P 500 tickers...")
     url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
     headers = {"User-Agent": "Mozilla/5.0"}
     html = requests.get(url, headers=headers).text
 
-    # Read all tables and pick the first one
-    tables = pd.read_html(html)
+    # wrap html in StringIO (fixes the FutureWarning)
+    tables = pd.read_html(StringIO(html))
     df = tables[0]
 
-    # Try to find the symbol column (handles variations)
+    # make sure all column names are strings
+    df.columns = df.columns.map(str)
+
+    # find any column containing 'symbol'
     possible_cols = [c for c in df.columns if "symbol" in c.lower()]
     if not possible_cols:
         raise ValueError(f"Couldn't find symbol column in table. Found: {df.columns.tolist()}")
@@ -36,7 +40,7 @@ def load_sp500():
     symbol_col = possible_cols[0]
     tickers = df[symbol_col].astype(str).tolist()
 
-    # Replace dots with dashes (Yahoo Finance formatting)
+    # replace dots with dashes for Yahoo Finance
     tickers = [ticker.replace(".", "-") for ticker in tickers]
 
     print(f"Loaded {len(tickers)} tickers.")
