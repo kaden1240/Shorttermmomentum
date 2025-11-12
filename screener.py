@@ -49,10 +49,25 @@ def load_sp500():
     print(f"Loaded {len(tickers)} tickers.")
     return tickers
 
+def load_commodities():
+    """
+    Returns a list of commodity futures tickers supported by yfinance.
+    You can expand this list as needed.
+    """
+    print("Loading commodity tickers...")
+    
+    # Example tickers (Yahoo Finance format)
+    # Gold, Silver, Crude Oil, Natural Gas, Corn, Wheat, Soybeans
+    commodities = ['GC=F', 'SI=F', 'CL=F', 'NG=F', 'ZC=F', 'ZW=F', 'ZS=F']
+    
+    print(f"Loaded {len(commodities)} commodities: {commodities}")
+    return commodities
+
 def safe_float(x):
     if hasattr(x, 'iloc'):
         return float(x.iloc[0])
     return float(x)
+
 
 
 
@@ -176,18 +191,18 @@ def run_screener():
     sheet3 = client.open(SHEET_NAME).get_worksheet(2)
     
     # Load tickers
-    SP500_TICKERS = load_sp500()
+    COMMODITY_TICKERS = load_commodities()
     
     # Clear and set up headers
     sheet.clear()
     sheet.append_row([
-        "High Momentum Stocks", "Change %", "Close", "Volume", "RSI", "MACD Diff",
+        "High Momentum Commodities", "Change %", "Close", "Volume", "RSI", "MACD Diff",
         "Stoch K"
     ])
     
     
     # Screen all tickers
-    for ticker in SP500_TICKERS:
+    for ticker in COMMODITY_TICKERS:
         print(f"Checking {ticker}...")
         data = get_stock_data(ticker)
         if data:
