@@ -191,18 +191,18 @@ def run_screener():
     sheet3 = client.open(SHEET_NAME).get_worksheet(2)
     
     # Load tickers
-    COMMODITY_TICKERS = load_commodities()
+    Load_Sp500 = load_sp500()
     
     # Clear and set up headers
     sheet.clear()
     sheet.append_row([
-        "High Momentum Commodities", "Change %", "Close", "Volume", "RSI", "MACD Diff",
+        "High Momentum Stocks", "Change %", "Close", "Volume", "RSI", "MACD Diff",
         "Stoch K"
     ])
     
     
     # Screen all tickers
-    for ticker in COMMODITY_TICKERS:
+    for ticker in Load_Sp500:
         print(f"Checking {ticker}...")
         data = get_stock_data(ticker)
         if data:
